@@ -8,11 +8,6 @@ async function initMongoConnection() {
     const url = process.env.MONGODB_URL;
     const db = process.env.MONGODB_DB;
 
-    console.log('MONGODB_USER:', user);
-    console.log('MONGODB_PASSWORD:', pwd);
-    console.log('MONGODB_URL:', url);
-    console.log('MONGODB_DB:', db);
-
     const connectionString = `mongodb+srv://${user}:${pwd}@${url}/${db}?retryWrites=true&w=majority&appName=Contacts`;
 
     await mongoose.connect(connectionString);

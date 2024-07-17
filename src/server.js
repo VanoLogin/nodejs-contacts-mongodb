@@ -61,23 +61,23 @@ function setupServer() {
     });
   });
 
-  // app.post('/contacts', async (req, res) => {
-  //   const contact = new Contact({
-  //     name: req.body.name,
-  //     phoneNumber: req.body.phoneNumber,
-  //     email: req.body.email,
-  //     isFavourite: req.body.isFavourite,
-  //     contactType: req.body.contactType,
-  //     createdAt: req.body.createdAt,
-  //     updatedAt: req.body.updatedAt,
-  //   });
-  //   try {
-  //     const newContact = await contact.save();
-  //     res.status(201).json(newContact);
-  //   } catch (err) {
-  //     res.status(400).json(err);
-  //   }
-  // });
+  app.post('/contacts', async (req, res) => {
+    const contact = new Contact({
+      name: req.body.name,
+      phoneNumber: req.body.phoneNumber,
+      email: req.body.email,
+      isFavourite: req.body.isFavourite,
+      contactType: req.body.contactType,
+      createdAt: req.body.createdAt,
+      updatedAt: req.body.updatedAt,
+    });
+    try {
+      const newContact = await contact.save();
+      res.status(201).json(newContact);
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  });
 
   app.get('/contacts/:id', async (req, res) => {
     const { id } = req.params;
