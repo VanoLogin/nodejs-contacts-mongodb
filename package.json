@@ -1,0 +1,32 @@
+{
+  "name": "goit-node-js",
+  "version": "1.0.0",
+  "description": "goit-node-js",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file=.env.example src/index.js",
+    "dev": "nodemon --env-file=.env.example src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.2.0",
+    "@faker-js/faker": "^8.4.1",
+    "eslint": "^9.2.0",
+    "globals": "^15.1.0",
+    "i": "^0.3.7",
+    "npm": "^10.8.1",
+    "pino-pretty": "^11.2.1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.1",
+    "nodemon": "^3.1.4",
+    "pino-http": "^10.2.0"
+  }
+}
