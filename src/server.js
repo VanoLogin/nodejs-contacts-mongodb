@@ -4,9 +4,8 @@ import pino from 'pino-http';
 import cors from 'cors';
 import { getAllContacts, getContactById } from './services/contacts.js';
 import { initMongoConnection } from './db/initMongoConnection.js';
-import { Contact } from './db/modals/contacts.js';
 
-const PORT = 3040;
+const PORT = process.env.PORT;
 
 const app = express();
 
@@ -22,10 +21,7 @@ app.use(
 );
 
 function setupServer() {
-  app.listen(PORT, async () => {
-    await initMongoConnection();
-    console.log(`Server is running on port ${PORT}`);
-  });
+  initMongoConnection();
 
   app.use((req, res, next) => {
     console.log(`Time: ${new Date().toLocaleString()}`);
@@ -52,6 +48,9 @@ function setupServer() {
     });
     next();
   });
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 
   app.get('/contacts', async (req, res) => {
     const contacts = await getAllContacts();
@@ -61,23 +60,23 @@ function setupServer() {
     });
   });
 
-  app.post('/contacts', async (req, res) => {
-    const contact = new Contact({
-      name: req.body.name,
-      phoneNumber: req.body.phoneNumber,
-      email: req.body.email,
-      isFavourite: req.body.isFavourite,
-      contactType: req.body.contactType,
-      createdAt: req.body.createdAt,
-      updatedAt: req.body.updatedAt,
-    });
-    try {
-      const newContact = await contact.save();
-      res.status(201).json(newContact);
-    } catch (err) {
-      res.status(400).json(err);
-    }
-  });
+  // app.post('/contacts', async (req, res) => {
+  //   const contact = new Contact({
+  //     name: req.body.name,
+  //     phoneNumber: req.body.phoneNumber,
+  //     email: req.body.email,
+  //     isFavourite: req.body.isFavourite,
+  //     contactType: req.body.contactType,
+  //     createdAt: req.body.createdAt,
+  //     updatedAt: req.body.updatedAt,
+  //   });
+  //   try {
+  //     const newContact = await contact.save();
+  //     res.status(201).json(newContact);
+  //   } catch (err) {
+  //     res.status(400).json(err);
+  //   }
+  // });
 
   app.get('/contacts/:id', async (req, res) => {
     const { id } = req.params;
@@ -92,6 +91,7 @@ function setupServer() {
       }
 
       res.status(200).json({
+        status: 200,
         message: `Successfully found contact with id ${id}!`,
         data: contact,
       });
