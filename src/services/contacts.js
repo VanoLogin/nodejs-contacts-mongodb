@@ -4,10 +4,6 @@ import { Contact } from '../db/modals/contacts.js';
 async function getAllContacts() {
   try {
     const contacts = await Contact.find({});
-    console.log('\n\n\n\n');
-    console.log(Contact);
-    console.log(contacts);
-    console.log('\n\n\n\n');
 
     return contacts;
   } catch (error) {
@@ -25,4 +21,44 @@ async function getContactById(id) {
     console.log(`Error getting contact by id: ${error}`);
   }
 }
-export { getContactById, getAllContacts };
+
+async function createNewContact(contact) {
+  try {
+    const newContact = await Contact.create(contact);
+    return newContact;
+  } catch (error) {
+    console.log(`Error creating contact by id: ${error}`);
+  }
+}
+async function deleteContactById(id) {
+  try {
+    const deletedContact = await Contact.findByIdAndDelete(id);
+    return deletedContact;
+  } catch (error) {
+    console.log(`Error deleting contact by id not found: ${error}`);
+  }
+}
+
+async function updateContact(id, contact, options = {}) {
+  const rawResult = await Contact.findOneAndUpdate(id, contact, {
+    new: true,
+    includeResultMetadata: true,
+    ...options,
+  });
+  console.log(rawResult);
+
+  if (!rawResult || !rawResult.value) return null;
+
+  return {
+    contact: rawResult.value,
+    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+  };
+}
+
+export {
+  getContactById,
+  getAllContacts,
+  createNewContact,
+  deleteContactById,
+  updateContact,
+};
