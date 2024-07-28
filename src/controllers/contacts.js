@@ -7,6 +7,7 @@ import {
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 import { notFoundHandler } from '../middlewares/notFoundHandler.js';
+import { errorHandler } from '../middlewares/errorHandler.js';
 
 const getContactsController = async (req, res) => {
   const contacts = await getAllContacts();
@@ -33,7 +34,7 @@ const getContactsByIdController = async (req, res, next) => {
   });
 };
 
-async function createContactsController(req, res, next) {
+async function createContactsController(req, res) {
   const newContact = {
     name: req.body.name,
     phoneNumber: req.body.phoneNumber,
@@ -46,7 +47,7 @@ async function createContactsController(req, res, next) {
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
-    data: createdContact,
+    data: { ...createdContact.toObject(), __v: false },
   });
 }
 async function deleteContactController(req, res, next) {
@@ -54,7 +55,7 @@ async function deleteContactController(req, res, next) {
   const contact = await deleteContactById(id);
 
   if (!contact) {
-    next(createHttpError(notFoundHandler));
+    next(createHttpError(errorHandler));
     return;
   }
   res.status(204).send();
@@ -62,9 +63,8 @@ async function deleteContactController(req, res, next) {
 async function patchContactsByIdController(req, res, next) {
   const { id } = req.params;
   const result = await updateContact(id, req.body);
-
   if (!result) {
-    next(createHttpError(notFoundHandler));
+    next(createHttpError(errorHandler));
     return;
   }
   res.json({
