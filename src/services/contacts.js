@@ -40,12 +40,13 @@ async function deleteContactById(id) {
 }
 
 async function updateContact(id, contact, options = {}) {
-  const rawResult = await Contact.findOneAndUpdate(id, contact, {
+  if (!mongoose.Types.ObjectId.isValid(id)) return null;
+
+  const rawResult = await Contact.findOneAndUpdate({ _id: id }, contact, {
     new: true,
     includeResultMetadata: true,
     ...options,
   });
-  console.log(rawResult);
 
   if (!rawResult || !rawResult.value) return null;
 
