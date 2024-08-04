@@ -8,18 +8,28 @@ async function getAllContacts({
   sortOrder,
   filter = {},
 }) {
-  //================================================================//
+  const { type, isFavourite } = filter;
   const skip = page > 0 ? (page - 1) * perPage : 0;
+  console.log(filter);
   try {
     let contactsQuery = Contact.find();
 
-    if (filter.type) {
-      contactsQuery.where('contactType').equals(filter.type);
+    if (type) {
+      contactsQuery.where('contactType').equals(type);
     }
-    if (filter.isFavourite === true || filter.isFavourite === false) {
-      contactsQuery.where('isFavourite').equals(filter.isFavourite);
+    if (isFavourite === true || isFavourite === false) {
+      contactsQuery.where('isFavourite').equals(isFavourite);
     }
-    const countQuery = contactsQuery.clone();
+    // if (type) {
+    //   contactsQuery.where('contactType').equals(type);
+    // } else {
+    //   return undefined;
+    // }
+    // if (isFavourite !== undefined) {
+    //   contactsQuery.where('isFavourite').equals(isFavourite);
+    // } else {
+    //   return undefined;
+    // }
 
     const [contacts, count] = await Promise.all([
       contactsQuery
@@ -27,7 +37,7 @@ async function getAllContacts({
         .skip(skip)
         .limit(perPage)
         .exec(),
-      countQuery.countDocuments(),
+      Contact.find().merge(contactsQuery).countDocuments(),
     ]);
 
     const totalPages = Math.ceil(count / perPage);
@@ -35,12 +45,9 @@ async function getAllContacts({
       page = totalPages;
     }
 
-    if (!contacts.length) {
-      return [];
-    }
-
     const hasPreviousPage = page > 1;
     const hasNextPage = page < totalPages;
+
     return {
       contacts,
       page,
@@ -51,7 +58,7 @@ async function getAllContacts({
       hasNextPage,
     };
   } catch (error) {
-    console.log(`Error getting Http to find all contacts: ${error}`);
+    console.log(`Error getting contacts: ${error.message}`);
   }
 }
 

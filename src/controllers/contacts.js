@@ -15,29 +15,36 @@ import { parseFilterParams } from '../utils/parseFilterParams.js';
 import createHttpError from 'http-errors';
 //==========================//
 
-const getContactsController = async (req, res) => {
-  const { page, perPage } = parsePaginationParams(req.query);
-  const { sortBy, sortOrder } = parseSortParams(req.query);
+const getContactsController = async (req, res, next) => {
+  try {
+    const { page, perPage } = parsePaginationParams(req.query);
+    const { sortBy, sortOrder } = parseSortParams(req.query);
 
-  const filter = parseFilterParams(req.query);
+    const filter = parseFilterParams(req.query);
+    console.log('Filter:', filter);
 
-  const contacts = await getAllContacts({
-    page,
-    perPage,
-    sortBy,
-    sortOrder,
-    filter,
-  });
+    console.log('filter===========', req.query);
 
-  if (!contacts.contacts.length) {
-    return [];
+    const contacts = await getAllContacts({
+      page,
+      perPage,
+      sortBy,
+      sortOrder,
+      filter,
+    });
+
+    if (!contacts.contacts || !contacts.contacts.length) {
+      return [];
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: contacts,
+    });
+  } catch (error) {
+    next(createHttpError(error));
   }
-
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully found contacts!',
-    data: contacts,
-  });
 };
 
 //======================================//

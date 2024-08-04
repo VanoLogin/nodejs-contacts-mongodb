@@ -1,31 +1,44 @@
 function parseType(maybeType) {
-  if (typeof maybeType !== 'string') return;
+  if (typeof maybeType !== 'string') return undefined;
   const typeKeys = ['work', 'home', 'personal'];
-  if (typeKeys.includes(maybeType)) return maybeType;
+  return typeKeys.includes(maybeType) ? maybeType : undefined;
 }
 
+// const parseIsFavourite = (isFavourite) => {
+//   if (typeof isFavourite === 'undefined') {
+//     return undefined;
+//   }
+
+//   if (typeof isFavourite === 'boolean') {
+//     return isFavourite;
+//   }
+
+//   if (typeof isFavourite !== 'boolean') {
+//     return undefined;
+//   }
+
+//   return isFavourite;
+// };
 const parseIsFavourite = (isFavourite) => {
   if (typeof isFavourite === 'undefined') {
     return undefined;
   }
 
-  const isBoolean = typeof isFavourite === 'boolean';
-  if (isBoolean) {
-    return isFavourite;
+  if (isFavourite.toLowerCase() === 'true') {
+    return true;
   }
 
-  const parsedIsFavourite = JSON.parse(isFavourite.toLowerCase());
-  if (typeof parsedIsFavourite !== 'boolean') {
-    return undefined;
+  if (isFavourite.toLowerCase() === 'false') {
+    return false;
   }
 
-  return parsedIsFavourite;
+  return undefined;
 };
 
 function parseFilterParams(params) {
-  const { type, isFavourite } = params;
+  const { contactType, isFavourite } = params;
 
-  const parsedType = parseType(type);
+  const parsedType = parseType(contactType);
   const parsedIsFavourite = parseIsFavourite(isFavourite);
 
   return {
