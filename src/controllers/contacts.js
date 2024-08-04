@@ -5,16 +5,42 @@ import {
   deleteContactById,
   updateContact,
 } from '../services/contacts.js';
+
+//==========================UTILS=========//
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
+//==========================//
+
 import createHttpError from 'http-errors';
+//==========================//
 
 const getContactsController = async (req, res) => {
-  const contacts = await getAllContacts();
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+
+  const filter = parseFilterParams(req.query);
+
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
+
+  if (!contacts.contacts.length) {
+    return [];
+  }
+
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
     data: contacts,
   });
 };
+
+//======================================//
 
 const getContactsByIdController = async (req, res, next) => {
   const { id } = req.params;
@@ -32,6 +58,7 @@ const getContactsByIdController = async (req, res, next) => {
     data: contact,
   });
 };
+//======================================//
 
 async function createContactsController(req, res) {
   const newContact = {
@@ -49,6 +76,9 @@ async function createContactsController(req, res) {
     data: createdContact.toObject(),
   });
 }
+
+//======================================//
+
 async function deleteContactController(req, res, next) {
   const { id } = req.params;
   const contact = await deleteContactById(id);
@@ -59,6 +89,8 @@ async function deleteContactController(req, res, next) {
   }
   res.status(204).send();
 }
+
+//======================================//
 
 async function patchContactsByIdController(req, res, next) {
   const { id } = req.params;
@@ -74,6 +106,8 @@ async function patchContactsByIdController(req, res, next) {
     data: result.contact,
   });
 }
+
+//======================================//
 
 export {
   getContactsController,
