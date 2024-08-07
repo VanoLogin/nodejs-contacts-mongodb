@@ -4,31 +4,12 @@ function parseType(maybeType) {
   return typeKeys.includes(maybeType) ? maybeType : undefined;
 }
 
-// const parseIsFavourite = (isFavourite) => {
-//   if (typeof isFavourite === 'undefined') {
-//     return undefined;
-//   }
-
-//   if (typeof isFavourite === 'boolean') {
-//     return isFavourite;
-//   }
-
-//   if (typeof isFavourite !== 'boolean') {
-//     return undefined;
-//   }
-
-//   return isFavourite;
-// };
 const parseIsFavourite = (isFavourite) => {
-  if (typeof isFavourite === 'undefined') {
-    return undefined;
-  }
-
-  if (isFavourite.toLowerCase() === 'true') {
+  if (isFavourite?.toLowerCase() === 'true') {
     return true;
   }
 
-  if (isFavourite.toLowerCase() === 'false') {
+  if (isFavourite?.toLowerCase() === 'false') {
     return false;
   }
 

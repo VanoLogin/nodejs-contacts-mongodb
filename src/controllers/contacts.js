@@ -21,9 +21,6 @@ const getContactsController = async (req, res, next) => {
     const { sortBy, sortOrder } = parseSortParams(req.query);
 
     const filter = parseFilterParams(req.query);
-    console.log('Filter:', filter);
-
-    console.log('filter===========', req.query);
 
     const contacts = await getAllContacts({
       page,
@@ -33,8 +30,12 @@ const getContactsController = async (req, res, next) => {
       filter,
     });
 
-    if (!contacts.contacts || !contacts.contacts.length) {
-      return [];
+    if (!contacts.data || !contacts.data.length) {
+      res.status(404).json({
+        status: 404,
+        message: 'Contacts not found',
+        data: [],
+      });
     }
 
     res.status(200).json({

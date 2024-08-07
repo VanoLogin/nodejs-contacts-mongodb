@@ -10,7 +10,6 @@ async function getAllContacts({
 }) {
   const { type, isFavourite } = filter;
   const skip = page > 0 ? (page - 1) * perPage : 0;
-  console.log(filter);
   try {
     let contactsQuery = Contact.find();
 
@@ -37,19 +36,22 @@ async function getAllContacts({
         .skip(skip)
         .limit(perPage)
         .exec(),
-      Contact.find().merge(contactsQuery).countDocuments(),
+      Contact.find().countDocuments(),
     ]);
 
     const totalPages = Math.ceil(count / perPage);
+
     if (page > totalPages) {
       page = totalPages;
+    } else if (page <= 0) {
+      page = 1;
     }
 
     const hasPreviousPage = page > 1;
     const hasNextPage = page < totalPages;
 
     return {
-      contacts,
+      data: contacts,
       page,
       perPage,
       totalItems: count,

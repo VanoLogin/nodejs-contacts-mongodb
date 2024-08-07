@@ -13,7 +13,7 @@ function parseSortBy(sortBy) {
   if (keys.includes(sortBy)) {
     return sortBy.toLowerCase();
   }
-  return 'id';
+  return '_id';
 }
 
 function parseSortParams(params) {
