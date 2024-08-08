@@ -8,6 +8,8 @@ async function getAllContacts({
   sortOrder,
   filter = {},
 }) {
+  console.log(sortBy, sortOrder);
+
   const { type, isFavourite } = filter;
   const skip = page > 0 ? (page - 1) * perPage : 0;
   try {
@@ -29,7 +31,6 @@ async function getAllContacts({
     // } else {
     //   return undefined;
     // }
-
     const [contacts, count] = await Promise.all([
       contactsQuery
         .sort({ [sortBy]: sortOrder })

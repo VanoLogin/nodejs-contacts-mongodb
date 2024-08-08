@@ -11,7 +11,7 @@ function parseSortBy(sortBy) {
   const keys = ['_id', 'name', 'isFavourite', 'contactType'];
 
   if (keys.includes(sortBy)) {
-    return sortBy.toLowerCase();
+    return sortBy;
   }
   return '_id';
 }
@@ -20,7 +20,7 @@ function parseSortParams(params) {
   const { sortBy, sortOrder } = params;
 
   const parsedSortBy = parseSortBy(sortBy);
-  const parsedSortOrder = parseSortOrder(sortOrder);
+  const parsedSortOrder = parseSortOrder(parsedSortBy, sortOrder);
 
   return {
     sortBy: parsedSortBy,
