@@ -18,9 +18,8 @@ function parseSortBy(sortBy) {
 
 function parseSortParams(params) {
   const { sortBy, sortOrder } = params;
-
   const parsedSortBy = parseSortBy(sortBy);
-  const parsedSortOrder = parseSortOrder(parsedSortBy, sortOrder);
+  const parsedSortOrder = parseSortOrder(sortOrder);
 
   return {
     sortBy: parsedSortBy,
