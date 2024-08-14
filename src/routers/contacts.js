@@ -5,10 +5,11 @@ import express from 'express';
 import {
   createContactSchema,
   updateContactSchema,
-} from '../../validation/validationContacts.js';
+} from '../validation/validationContacts.js';
 //=============Middlewares================================//
 import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { authUser } from '../middlewares/auth.js';
 
 //==============Utils================================//
 
@@ -29,16 +30,23 @@ import {
 const contactsRouter = Router();
 const jsonParser = express.json();
 
-contactsRouter.get('/contacts', ctrlWrapper(getContactsController));
+contactsRouter.get(
+  '/contacts',
+  authUser,
+  jsonParser,
+  ctrlWrapper(getContactsController),
+);
 
 contactsRouter.get(
   '/contacts/:id',
+  authUser,
   isValidId,
   ctrlWrapper(getContactsByIdController),
 );
 
 contactsRouter.post(
   '/contacts',
+  authUser,
   jsonParser,
   validateBody(createContactSchema),
   ctrlWrapper(createContactsController),
@@ -46,6 +54,7 @@ contactsRouter.post(
 
 contactsRouter.delete(
   '/contacts/:id',
+  authUser,
   isValidId,
   jsonParser,
   ctrlWrapper(deleteContactController),
@@ -53,6 +62,7 @@ contactsRouter.delete(
 
 contactsRouter.patch(
   '/contacts/:id',
+  authUser,
   isValidId,
   jsonParser,
   validateBody(updateContactSchema),

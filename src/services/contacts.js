@@ -7,6 +7,7 @@ async function getAllContacts({
   sortBy,
   sortOrder,
   filter = {},
+  parentId,
 }) {
   const { type, isFavourite } = filter;
   const skip = page > 0 ? (page - 1) * perPage : 0;
@@ -19,16 +20,9 @@ async function getAllContacts({
     if (isFavourite === true || isFavourite === false) {
       contactsQuery.where('isFavourite').equals(isFavourite);
     }
-    // if (type) {
-    //   contactsQuery.where('contactType').equals(type);
-    // } else {
-    //   return undefined;
-    // }
-    // if (isFavourite !== undefined) {
-    //   contactsQuery.where('isFavourite').equals(isFavourite);
-    // } else {
-    //   return undefined;
-    // }
+
+    contactsQuery.where('parentId').equals(parentId);
+
     const [contacts, count] = await Promise.all([
       contactsQuery
         .sort({ [sortBy]: sortOrder })
@@ -63,9 +57,11 @@ async function getAllContacts({
   }
 }
 
-async function getContactById(id) {
+async function getContactById(studentId) {
   try {
-    const contact = await Contact.findById(id);
+    const contact = await Contact.findOne({
+      _id: studentId,
+    });
     return contact;
   } catch (error) {
     console.log(`Error getting contact by id: ${error}`);
@@ -80,23 +76,28 @@ async function createNewContact(contact) {
     console.log(`Error creating contact by id: ${error}`);
   }
 }
-async function deleteContactById(id) {
+async function deleteContactById(id, parentId) {
   try {
-    const deletedContact = await Contact.findByIdAndDelete(id);
+    const deletedContact = await Contact.findByIdAndDelete({
+      _id: id,
+      parentId: parentId,
+    });
     return deletedContact;
   } catch (error) {
     console.log(`Error deleting contact by id not found: ${error}`);
   }
 }
 
-async function updateContact(id, contact, options = {}) {
-  // if (!mongoose.Types.ObjectId.isValid(id)) return null;
-
-  const rawResult = await Contact.findOneAndUpdate({ _id: id }, contact, {
-    new: true,
-    includeResultMetadata: true,
-    ...options,
-  });
+async function updateContact(id, parentId, contact, options = {}) {
+  const rawResult = await Contact.findOneAndUpdate(
+    { _id: id, parentId },
+    contact,
+    {
+      new: true,
+      includeResultMetadata: true,
+      ...options,
+    },
+  );
 
   if (!rawResult || !rawResult.value) return null;
 

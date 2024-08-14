@@ -2,8 +2,11 @@ import 'dotenv/config';
 import pino from 'pino-http';
 import cors from 'cors';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 
 import contactsRouter from './routers/contacts.js';
+import authRouter from './routers/auth.js';
+
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
@@ -15,6 +18,7 @@ function setupServer() {
   initMongoConnection();
 
   const app = express();
+  app.use(cookieParser());
 
   app.use(cors());
 
@@ -31,7 +35,7 @@ function setupServer() {
       message: 'Hello world!',
     });
   });
-
+  app.use(authRouter);
   app.use(contactsRouter);
 
   app.use('*', notFoundHandler);
