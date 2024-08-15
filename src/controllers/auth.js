@@ -12,7 +12,7 @@ async function registerController(req, res) {
   const createdNewUser = await AuthService.createNewUser(user);
 
   res.send({
-    status: 200,
+    status: 201,
     message: 'Successfully registered a user!',
     data: createdNewUser,
   });

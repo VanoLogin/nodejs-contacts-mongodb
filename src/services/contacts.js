@@ -7,12 +7,12 @@ async function getAllContacts({
   sortBy,
   sortOrder,
   filter = {},
-  parentId,
+  userId,
 }) {
   const { type, isFavourite } = filter;
   const skip = page > 0 ? (page - 1) * perPage : 0;
   try {
-    let contactsQuery = Contact.find();
+    let contactsQuery = Contact.find({ userId });
 
     if (type) {
       contactsQuery.where('contactType').equals(type);
@@ -21,18 +21,17 @@ async function getAllContacts({
       contactsQuery.where('isFavourite').equals(isFavourite);
     }
 
-    contactsQuery.where('parentId').equals(parentId);
+    const countQuery = contactsQuery.clone();
 
-    const [contacts, count] = await Promise.all([
-      contactsQuery
-        .sort({ [sortBy]: sortOrder })
-        .skip(skip)
-        .limit(perPage)
-        .exec(),
-      Contact.find().countDocuments(),
-    ]);
+    const contactsCount = await countQuery.countDocuments();
 
-    const totalPages = Math.ceil(count / perPage);
+    const contacts = await contactsQuery
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(perPage)
+      .exec();
+
+    const totalPages = Math.ceil(contactsCount / perPage);
 
     if (page > totalPages) {
       page = totalPages;
@@ -47,7 +46,7 @@ async function getAllContacts({
       data: contacts,
       page,
       perPage,
-      totalItems: count,
+      totalItems: contactsCount,
       totalPages,
       hasPreviousPage,
       hasNextPage,
@@ -57,16 +56,40 @@ async function getAllContacts({
   }
 }
 
-async function getContactById(studentId) {
+// async function getContactById(studentId) {
+//   try {
+//     const contact = await Contact.findOne({
+//       _id: studentId,
+//     });
+//     return contact;
+//   } catch (error) {
+//     console.log(`Error getting contact by id: ${error}`);
+//   }
+// }
+async function getContactById(contactId, userId) {
   try {
     const contact = await Contact.findOne({
-      _id: studentId,
+      _id: contactId,
+      userId: userId,
     });
     return contact;
   } catch (error) {
     console.log(`Error getting contact by id: ${error}`);
   }
 }
+
+// const getContactById = async (id, userId) => {
+//   try {
+//     if (!mongoose.Types.ObjectId.isValid(id)) {
+//       return null;
+//     }
+//     const contact = await Contact.findOne({ id, userId });
+//     return contact;
+//   } catch (error) {
+//     console.error('Error getting contact by ID:', error);
+//     throw error;
+//   }
+// };
 
 async function createNewContact(contact) {
   try {
@@ -76,11 +99,11 @@ async function createNewContact(contact) {
     console.log(`Error creating contact by id: ${error}`);
   }
 }
-async function deleteContactById(id, parentId) {
+async function deleteContactById(id, userId) {
   try {
     const deletedContact = await Contact.findByIdAndDelete({
       _id: id,
-      parentId: parentId,
+      userId: userId,
     });
     return deletedContact;
   } catch (error) {
@@ -88,9 +111,9 @@ async function deleteContactById(id, parentId) {
   }
 }
 
-async function updateContact(id, parentId, contact, options = {}) {
+async function updateContact(id, userId, contact, options = {}) {
   const rawResult = await Contact.findOneAndUpdate(
-    { _id: id, parentId },
+    { _id: id, userId },
     contact,
     {
       new: true,

@@ -21,14 +21,14 @@ const getContactsController = async (req, res, next) => {
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
     const filter = parseFilterParams(req.query);
-
+    console.log(req.user._id);
     const contacts = await getAllContacts({
       page,
       perPage,
       sortBy,
       sortOrder,
       filter,
-      parentId: req.user._id,
+      userId: req.user._id,
     });
 
     if (!contacts.data || !contacts.data.length) {
@@ -51,15 +51,29 @@ const getContactsController = async (req, res, next) => {
 
 //================getContactsByIdController======================//
 
+// const getContactsByIdController = async (req, res, next) => {
+//   const { id } = req.params;
+//   console.log(req.user._id);
+//   const contact = await getContactById(id);
+//   console.log(contact);
+//   if (
+//     contact === null ||
+//     contact.userId.toString() !== req.user._id.toString()
+//   ) {
+//     return next(createHttpError(404, 'Contact not found'));
+//   }
+
+//   res.status(200).json({
+//     status: 200,
+//     message: `Successfully found contact with id ${id}!`,
+//     data: contact,
+//   });
+// };
 const getContactsByIdController = async (req, res, next) => {
   const { id } = req.params;
+  const contact = await getContactById(id, req.user._id);
 
-  const contact = await getContactById(id);
-
-  if (
-    contact === null ||
-    contact.parentId.toString() !== req.user._id.toString()
-  ) {
+  if (!contact) {
     return next(createHttpError(404, 'Contact not found'));
   }
 
@@ -78,7 +92,7 @@ async function createContactsController(req, res) {
     email: req.body.email,
     isFavourite: req.body.isFavourite,
     contactType: req.body.contactType,
-    parentId: req.user._id,
+    userId: req.user._id,
   };
 
   const createdContact = await createNewContact(newContact);
