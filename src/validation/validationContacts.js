@@ -18,6 +18,7 @@ const createContactSchema = Joi.object({
     .messages({ 'string.base': 'PhoneNumber should be a string' }),
   isFavourite: Joi.boolean(),
   contactType: Joi.string().valid('work', 'home', 'personal').required(),
+  photo: Joi.string(),
 });
 
 const updateContactSchema = Joi.object({
@@ -26,6 +27,7 @@ const updateContactSchema = Joi.object({
   phoneNumber: Joi.string().min(3).max(20),
   isFavourite: Joi.boolean(),
   contactType: Joi.string().valid('work', 'home', 'personal'),
+  photo: Joi.string(),
 });
 
 export { createContactSchema, updateContactSchema };

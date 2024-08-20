@@ -8,6 +8,8 @@ import { validateBody } from '../middlewares/validateBody.js';
 import {
   registerUserSchema,
   loginUserSchema,
+  resetEmailSchema,
+  resetPasswordSchema,
 } from '../validation/validationUser.js';
 //==============controllers================================//
 
@@ -16,6 +18,8 @@ import {
   loginController,
   logoutUserController,
   refreshUserController,
+  resetEmailController,
+  resetPasswordController,
 } from '../controllers/auth.js';
 
 const userRouter = Router();
@@ -37,4 +41,19 @@ userRouter.post(
 userRouter.post('/auth/logout', ctrlWrapper(logoutUserController));
 userRouter.post('/auth/refresh', ctrlWrapper(refreshUserController));
 
+//=====================Refresh password =================//
+
+userRouter.post(
+  '/auth/request-reset-email',
+  jsonParser,
+  validateBody(resetEmailSchema),
+  ctrlWrapper(resetEmailController),
+);
+
+userRouter.post(
+  '/auth/reset-password',
+  jsonParser,
+  validateBody(resetPasswordSchema),
+  ctrlWrapper(resetPasswordController),
+);
 export default userRouter;

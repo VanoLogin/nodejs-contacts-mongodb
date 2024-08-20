@@ -10,6 +10,7 @@ import {
 import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { authUser } from '../middlewares/auth.js';
+import { upload } from '../middlewares/multer.js';
 
 //==============Utils================================//
 
@@ -48,6 +49,8 @@ contactsRouter.post(
   '/contacts',
   authUser,
   jsonParser,
+  upload.single('photo'),
+
   validateBody(createContactSchema),
   ctrlWrapper(createContactsController),
 );
@@ -57,6 +60,7 @@ contactsRouter.delete(
   authUser,
   isValidId,
   jsonParser,
+
   ctrlWrapper(deleteContactController),
 );
 
@@ -65,6 +69,8 @@ contactsRouter.patch(
   authUser,
   isValidId,
   jsonParser,
+  upload.single('photo'),
+
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactsByIdController),
 );
