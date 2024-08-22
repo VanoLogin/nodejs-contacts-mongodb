@@ -33,4 +33,8 @@ export const CLOUDINARY = {
   ENABLE_CLOUDINARY: process.env.ENABLE_CLOUDINARY,
 };
 
+//swagger
+
+export const SWAGGER_PATH = path.join(process.cwd(), 'docs', 'swagger.json');
+
 export { SORT_ORDER, ACCESS_TOKEN_TIL, REFRESH_TOKEN_TIL };

@@ -13,6 +13,8 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { initMongoConnection } from './db/initMongoConnection.js';
 import { UPLOAD_DIR } from './constants/index.js';
 
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
+
 const PORT = process.env.PORT;
 
 function setupServer() {
@@ -42,6 +44,8 @@ function setupServer() {
   app.use(contactsRouter);
 
   app.use('*', notFoundHandler);
+
+  app.use('/api-docs', swaggerDocs());
 
   app.use(errorHandler);
 
