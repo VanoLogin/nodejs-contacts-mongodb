@@ -90,7 +90,8 @@ const getContactsByIdController = async (req, res, next) => {
 
 async function createContactsController(req, res) {
   const photo = req.file;
-  console.log(photo);
+  const imageUrl = photo ? await saveFileToCloudinary(photo) : '';
+
   const newContact = {
     name: req.body.name,
     phoneNumber: req.body.phoneNumber,
@@ -98,12 +99,10 @@ async function createContactsController(req, res) {
     isFavourite: req.body.isFavourite,
     contactType: req.body.contactType,
     userId: req.user._id,
-    photo: photo.filename,
+    ...(imageUrl && { photo: imageUrl }),
   };
-  console.log(newContact);
   const createdContact = await createNewContact(newContact);
-  const url = await saveFileToCloudinary(photo);
-  console.log(url);
+
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',

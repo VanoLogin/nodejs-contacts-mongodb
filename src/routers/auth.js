@@ -44,14 +44,14 @@ userRouter.post('/auth/refresh', ctrlWrapper(refreshUserController));
 //=====================Refresh password =================//
 
 userRouter.post(
-  '/auth/request-reset-email',
+  '/auth/send-reset-email',
   jsonParser,
   validateBody(resetEmailSchema),
   ctrlWrapper(resetEmailController),
 );
 
 userRouter.post(
-  '/auth/reset-password',
+  '/auth/reset-pwd',
   jsonParser,
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController),
