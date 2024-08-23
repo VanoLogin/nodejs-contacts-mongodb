@@ -39,13 +39,12 @@ function setupServer() {
     });
   });
   app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
 
   app.use(authRouter);
   app.use(contactsRouter);
 
   app.use('*', notFoundHandler);
-
-  app.use('/api-docs', swaggerDocs());
 
   app.use(errorHandler);
 
