@@ -14,17 +14,32 @@ parameters:
     schema:
       type: integer
       example: 1
+    description: The page number of results to return.
   - in: query
     name: perPage
     schema:
       type: integer
       example: 10
+    description: The number of results per page.
   - in: query
     name: sortOrder
     schema:
       type: string
       enum: ['asc', 'desc']
       example: 'asc'
+    description: The order to sort the contacts by (ascending or descending).
+  - in: query
+    name: isFavourite
+    schema:
+      type: boolean
+      example: true
+    description: Filter contacts by favourite status.
+  - in: query
+    name: contactType
+    schema:
+      type: string
+      example: 'personal'
+    description: Filter contacts by type (e.g., personal, work).
 
 responses:
   '200':
