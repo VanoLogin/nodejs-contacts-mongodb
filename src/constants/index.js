@@ -16,7 +16,7 @@ export const SMTP = {
   USER: process.env.SMTP_USER,
   PASSWORD: process.env.SMTP_PASSWORD,
   FROM: process.env.SMTP_FROM,
-  JWT_SECRET_TOKEN: process.env.JWT_SECRET_TOKEN,
+  JWT_SECRET: process.env.JWT_SECRET,
 };
 
 export const APP_DOMAIN = process.env.APP_DOMAIN;

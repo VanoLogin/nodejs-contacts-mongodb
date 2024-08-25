@@ -3,6 +3,7 @@ import pino from 'pino-http';
 import cors from 'cors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import 'dotenv/config';
 
 import contactsRouter from './routers/contacts.js';
 import authRouter from './routers/auth.js';
