@@ -96,7 +96,6 @@ async function resetEmail(email) {
   const user = await User.findOne({ email });
 
   if (user === null) throw createHttpError(404, 'User not found');
-  console.log('JWT_SECRET_TOKEN:', SMTP.JWT_SECRET);
 
   const jwtResetToken = jwt.sign(
     {
@@ -106,7 +105,6 @@ async function resetEmail(email) {
     SMTP.JWT_SECRET,
     { expiresIn: '15m' },
   );
-  console.log('jwtResetToken', jwtResetToken);
 
   const templateFilePath = path.join(TEMPLATE_DIR, 'index.html');
 
