@@ -102,7 +102,7 @@ async function resetEmail(email) {
       sub: user._id,
       email,
     },
-    SMTP.JWT_SECRET_TOKEN,
+    SMTP.JWT_SECRET,
     { expiresIn: '15m' },
   );
 
@@ -130,7 +130,7 @@ async function resetEmail(email) {
 async function resetPassword(password, token) {
   let decoded;
   try {
-    decoded = jwt.verify(token, SMTP.JWT_SECRET_TOKEN);
+    decoded = jwt.verify(token, SMTP.JWT_SECRET);
     console.log(decoded);
   } catch (error) {
     throw createHttpError(401, error.message);
