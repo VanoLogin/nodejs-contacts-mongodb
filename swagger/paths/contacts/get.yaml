@@ -3,7 +3,7 @@ tags:
 
 summary: Get list of contacts
 operationId: getContacts
-description: Get list of users with this endpoint
+description: Get list of contacts with this endpoint
 
 security:
   - bearerAuth: []
@@ -14,32 +14,26 @@ parameters:
     schema:
       type: integer
       example: 1
-    description: The page number of results to return.
+    description: Номер сторінки для пагінації
   - in: query
     name: perPage
     schema:
       type: integer
       example: 10
-    description: The number of results per page.
+    description: Кількість контактів на сторінку
   - in: query
     name: sortOrder
     schema:
       type: string
       enum: ['asc', 'desc']
       example: 'asc'
-    description: The order to sort the contacts by (ascending or descending).
+    description: Порядок сортування (зростаючий або спадаючий)
   - in: query
-    name: isFavourite
-    schema:
-      type: boolean
-      example: true
-    description: Filter contacts by favourite status.
-  - in: query
-    name: contactType
+    name: sortBy
     schema:
       type: string
-      example: 'personal'
-    description: Filter contacts by type (e.g., personal, work).
+      example: 'name'
+    description: Поле для сортування (наприклад, 'name', 'email')
 
 responses:
   '200':

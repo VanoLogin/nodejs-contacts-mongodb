@@ -328,7 +328,7 @@
         ],
         "summary": "Get list of contacts",
         "operationId": "getContacts",
-        "description": "Get list of users with this endpoint",
+        "description": "Get list of contacts with this endpoint",
         "security": [
           {
             "bearerAuth": []
@@ -341,7 +341,8 @@
             "schema": {
               "type": "integer",
               "example": 1
-            }
+            },
+            "description": "Номер сторінки для пагінації"
           },
           {
             "in": "query",
@@ -349,7 +350,8 @@
             "schema": {
               "type": "integer",
               "example": 10
-            }
+            },
+            "description": "Кількість контактів на сторінку"
           },
           {
             "in": "query",
@@ -361,7 +363,17 @@
                 "desc"
               ],
               "example": "asc"
-            }
+            },
+            "description": "Порядок сортування (зростаючий або спадаючий)"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "example": "name"
+            },
+            "description": "Поле для сортування (наприклад, 'name', 'email')"
           }
         ],
         "responses": {
